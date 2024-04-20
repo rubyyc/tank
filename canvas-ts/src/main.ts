@@ -48,16 +48,31 @@ app.stroke()
 // app.stroke()
 
 
-app.fillStyle = '#34495e'
+// app.fillStyle = '#34495e'
 
-app.fillRect(0,0,el.width,el.height)
+// app.fillRect(0,0,el.width,el.height)
 
-app.font = '40px Fira Code Regular Nerd Font'
+// app.font = '40px Fira Code Regular Nerd Font'
 
-app.fillStyle = 'white'
-app.textBaseline = 'top'
-app.fillText('苑畅',50,100)
+// app.fillStyle = 'white'
+// app.textBaseline = 'top'
+// app.fillText('苑畅',50,100)
 
+
+// 贴图
+
+const img = document.createElement('img')
+
+// 注意看图片路径,跟index.html一个级别的
+img.src = './images/1.jpeg'
+
+img.onload = ()=>{
+  // console.log(111)
+  // document.body.insertAdjacentElement('afterbegin',img)
+  const pattern = app.createPattern(img,'repeat')!
+  app.fillStyle = pattern
+  app.fillRect(0,0,200,300)
+} 
 
 
 
