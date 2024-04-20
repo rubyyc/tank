@@ -23,27 +23,45 @@ app.arc(100,1000,50,0,2*Math.PI)
 app.stroke()
 */
 
-app.beginPath()
+// app.beginPath()
 
-app.moveTo(el.width/2,10)
+// app.moveTo(el.width/2,10)
 
-app.lineTo(el.width -10,250)
+// app.lineTo(el.width -10,250)
 
-app.lineTo(10,250)
+// app.lineTo(10,250)
 
-app.closePath()
+// app.closePath()
 
-const gradient = app.createLinearGradient(0,0,300,300)
-gradient.addColorStop(0,'#27ae60')
-gradient.addColorStop(0.5,'#e74c3c')
-gradient.addColorStop(1,'#f39c12')
+// const gradient = app.createLinearGradient(0,0,300,300)
+// gradient.addColorStop(0,'#27ae60')
+// gradient.addColorStop(0.5,'#e74c3c')
+// gradient.addColorStop(1,'#f39c12')
 
-app.strokeStyle = gradient
-app.lineWidth = 10
+// app.strokeStyle = gradient
+// app.lineWidth = 10
 
-app.fillStyle = gradient
+// app.fillStyle = gradient
 
-app.fill()
+// app.fill()
 
-app.stroke()
+// app.stroke()
+
+
+app.fillStyle = '#34495e'
+
+app.fillRect(0,0,el.width,el.height)
+
+app.font = '40px Fira Code Regular Nerd Font'
+
+app.fillStyle = 'white'
+app.textBaseline = 'top'
+app.fillText('苑畅',50,100)
+
+
+
+
+
+
+
 
