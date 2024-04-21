@@ -1,82 +1,110 @@
-const el = document.querySelector<HTMLCanvasElement>('#canvas')!
-/* !代表一定存在 */
-// const app = el?.getContext('2d') ?代表可能是空
-const app = el.getContext('2d')!
+import { junit } from "node:test/reporters";
+import "./style.css";
 
-// app.fillStyle = 'red'
-// app.fillRect(0,0,300,300)
+class Blackboard {
+  constructor(
+    public el = document.querySelector<HTMLCanvasElement>("#canvas")!,
+    public height: number = el.height,
+    public width: number = el.width,
+    private app = el.getContext("2d")!,
+    private btns: HTMLDivElement = document.createElement("div"),
+    private bgColor = "#000",
+    private lineColor = "#fff"
+  ) {
+    this.initCanvas();
+    this.bindEvent();
+  }
 
-// app.fillStyle = '#27ae60'
-// app.fillRect(0,0,100,100)
+  private initCanvas() {
+    this.app.fillStyle = this.bgColor;
+    this.app.fillRect(0, 0, this.width, this.height);
 
-// app.strokeStyle = '#27ae60'
-// app.lineWidth = 20
-// app.lineJoin = 'round'
-// app.strokeRect(50,50,200,200)
+    this.btns.style.cssText = "margin-top:10px;";
+    this.el.insertAdjacentElement("afterend", this.btns);
+  }
 
-/*
-app.fillStyle = '#27ae60'
-app.lineWidth = 20
-// 画啥
-app.arc(100,1000,50,0,2*Math.PI)
-// 画
-app.stroke()
-*/
+  private bindEvent() {
+    const callback = this.drawLine.bind(this);
+    this.el.addEventListener("mousedown", () => {
+      this.app.beginPath();
+      this.app.strokeStyle = this.lineColor;
+      this.el.addEventListener("mousemove", callback);
 
-// app.beginPath()
+      document.addEventListener("mouseup", () => {
+        this.el.removeEventListener("mousemove", callback);
+      });
+    });
+  }
 
-// app.moveTo(el.width/2,10)
+  private drawLine(event: MouseEvent) {
+    this.app.lineTo(event.offsetX, event.offsetY);
+    this.app.stroke();
+  }
 
-// app.lineTo(el.width -10,250)
+  public setBgColor(color: string) {
+    this.bgColor = color;
+    this.app.fillStyle = color;
+    this.app.fillRect(0, 0, this.el.width, this.el.height);
+    return this;
+  }
 
-// app.lineTo(10,250)
+  public clear() {
+    const el = document.createElement("button");
+    el.innerText = "清屏1";
+    this.btns.insertAdjacentElement("afterbegin", el);
 
-// app.closePath()
+    el.addEventListener("click", () => {
+      this.app.fillStyle = this.bgColor;
+      this.app.fillRect(0, 0, this.el.width, this.el.height);
+    });
+    return this;
+  }
 
-// const gradient = app.createLinearGradient(0,0,300,300)
-// gradient.addColorStop(0,'#27ae60')
-// gradient.addColorStop(0.5,'#e74c3c')
-// gradient.addColorStop(1,'#f39c12')
+  public setLineColor() {
+    const colors = ["#1abc9c", "#f1c40f", "#9b59b6", "#ecf0f1"];
+    const container = document.createElement("div");
+    container.classList.add("color-container");
 
-// app.strokeStyle = gradient
-// app.lineWidth = 10
+    colors.forEach((color) => {
+      const div = document.createElement("div");
+      div.style.cssText = `width:20px;height:20px;background:${color}`;
+      container.insertAdjacentElement("afterbegin", div);
 
-// app.fillStyle = gradient
+      div.addEventListener("click", () => {
+        this.lineColor = color;
+      });
+    });
+    this.btns.insertAdjacentElement("beforeend", container);
+  }
 
-// app.fill()
+  public eraseInit() {
+    const el = document.createElement("button");
+    el.innerText = "橡皮擦";
+    this.btns.insertAdjacentElement("afterbegin", el);
 
-// app.stroke()
+    el.addEventListener("click", () => {
+      this.lineColor = this.bgColor;
+      this.app.lineWidth = 20;
+    });
+    return this;
+  }
 
+  public short() {
+    const el = document.createElement("button");
+    el.innerText = "截图";
+    this.btns.insertAdjacentElement("afterbegin", el);
 
-// app.fillStyle = '#34495e'
+    const img = document.createElement('img')!
+    el.addEventListener("click", () => {
+      img.src = this.el.toDataURL('image/jpeg')
+      img.classList.add('img-short')
+    });
+    this.btns.insertAdjacentElement('afterend',img)
+    return this;
+  }
+}
 
-// app.fillRect(0,0,el.width,el.height)
+const instance = new Blackboard();
 
-// app.font = '40px Fira Code Regular Nerd Font'
-
-// app.fillStyle = 'white'
-// app.textBaseline = 'top'
-// app.fillText('苑畅',50,100)
-
-
-// 贴图
-
-const img = document.createElement('img')
-
-// 注意看图片路径,跟index.html一个级别的
-img.src = './images/1.jpeg'
-
-img.onload = ()=>{
-  // console.log(111)
-  // document.body.insertAdjacentElement('afterbegin',img)
-  const pattern = app.createPattern(img,'repeat')!
-  app.fillStyle = pattern
-  app.fillRect(0,0,200,300)
-} 
-
-
-
-
-
-
-
+instance.clear().setBgColor("#16a085").eraseInit().short();
+instance.setLineColor();
